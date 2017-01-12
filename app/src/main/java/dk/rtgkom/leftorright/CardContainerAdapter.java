@@ -23,14 +23,14 @@ public class CardContainerAdapter extends RecyclerView.Adapter<CardContainerAdap
 
     private int rootHeight;
     private int cardsSwiped;
-    private int[] cardsArray;
+    private Card[] cardsArray;
 
     private LinearLayoutCompat cardsWrapper;
     private MainUIHandler mainUIHandler;
 
     public CardContainerAdapter(MainUIHandler mainUIHandler, LinearLayoutCompat cardsWrapper){
         cardsSwiped = 0;
-        cardsArray = new int[20];
+        cardsArray = generateNewCards();
         this.mainUIHandler = mainUIHandler;
         this.cardsWrapper = cardsWrapper;
     }
@@ -54,10 +54,14 @@ public class CardContainerAdapter extends RecyclerView.Adapter<CardContainerAdap
         return Integer.MAX_VALUE;
     }
 
-    private int[] generateNewCards(){
-        int[] cards = new int[20];
+    private Card[] generateNewCards(){
+        Card[] cards = new Card[20];
+        Random random = new Random();
         for (int i=0; i<20; i++) {
-            cards[i] = new Random().nextInt(4);
+            int color = random.nextInt(2);
+            int arrow = random.nextInt(2);
+            cards[i] = new Card(color, arrow);
+            System.out.println("color : " + cards[i].getColor());
         }
         return cards;
     }
@@ -65,13 +69,15 @@ public class CardContainerAdapter extends RecyclerView.Adapter<CardContainerAdap
     @Override
     public void onCardDismiss(int position) {
         System.out.println("Dismiss : " + position);
-        notifyItemRemoved(position);
+        //notifyItemRemoved(position);
+        notifyDataSetChanged();
         cardsSwiped++;
         System.out.println(cardsSwiped);
-        /*if(cardsSwiped > 10) {
+        if(cardsSwiped > 10) {
             cardsArray = generateNewCards();
             notifyDataSetChanged();
-        }*/
+            cardsSwiped = 0;
+        }
         mainUIHandler.getHandler().sendEmptyMessage(MainUIHandler.TOP_EXTEND);
     }
 

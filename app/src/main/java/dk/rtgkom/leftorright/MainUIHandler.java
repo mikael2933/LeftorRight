@@ -50,14 +50,20 @@ public class MainUIHandler {
                 super.handleMessage(msg);
                 switch (msg.what) {
                     case TOP_REDUCE:
-                        System.out.println("REDUCE : " + cardsWrapper.getHeight()/10);
                         reduceTopBy(cardsWrapper.getHeight()/10);
                         break;
                     case TOP_EXTEND:
-                        System.out.println("EXTEND : " + cardsWrapper.getHeight()/4);
-                        extendTopBy((int) (cardsWrapper.getHeight()*0.35));
+                        extendTopBy((int) (cardsWrapper.getHeight()/4));
                         break;
                 }
+            }
+        }
+
+        private void reduceTopBy(int size) {
+            if (topScroller.getHeight() > 0) {
+                ViewGroup.LayoutParams params = topScroller.getLayoutParams();
+                params.height -= size;
+                topScroller.setLayoutParams(params);
             }
         }
 
@@ -67,11 +73,6 @@ public class MainUIHandler {
             topScroller.setLayoutParams(params);
         }
 
-        private void reduceTopBy(int size) {
-            ViewGroup.LayoutParams params = topScroller.getLayoutParams();
-            params.height -= size;
-            topScroller.setLayoutParams(params);
-        }
     }
 
     public UIHandler getHandler() {
