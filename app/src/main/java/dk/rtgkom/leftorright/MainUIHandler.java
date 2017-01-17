@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
 
@@ -16,32 +17,40 @@ import java.lang.ref.WeakReference;
 public class MainUIHandler {
     public static final int TOP_REDUCE = 0;
     public static final int TOP_EXTEND = 1;
+    public static final int INCREASE_SCORE = 2;
 
     private UIHandler handler;
 
     public MainUIHandler(MainActivity mainActivity,
                          View topScroller,
                          LinearLayoutCompat cardsWrapper,
-                         RecyclerView cardsContainer){
-        handler = new UIHandler(mainActivity, topScroller, cardsWrapper, cardsContainer);
+                         RecyclerView cardsContainer,
+                         TextView scoreBoard){
+        handler = new UIHandler(mainActivity, topScroller, cardsWrapper, cardsContainer, scoreBoard);
     }
 
     public static class UIHandler extends Handler {
 
         private final WeakReference<MainActivity> weakReference;
 
+        private int scoreCount;
         private View topScroller;
         private LinearLayoutCompat cardsWrapper;
         private RecyclerView cardsContainer;
+        private TextView scoreBoard;
 
         public UIHandler(MainActivity mainActivity,
                          View topScroller,
                          LinearLayoutCompat cardsWrapper,
-                         RecyclerView cardsContainer) {
+                         RecyclerView cardsContainer,
+                         TextView scoreBoard) {
             weakReference = new WeakReference<MainActivity>(mainActivity);
             this.topScroller = topScroller;
             this.cardsWrapper = cardsWrapper;
             this.cardsContainer = cardsContainer;
+            this.scoreBoard = scoreBoard;
+
+            scoreCount = 0;
         }
 
         @Override
@@ -55,8 +64,16 @@ public class MainUIHandler {
                     case TOP_EXTEND:
                         extendTopBy((int) (cardsWrapper.getHeight()/4));
                         break;
+                    case INCREASE_SCORE:
+                        increaseScoreBy(1);
+                        break;
                 }
             }
+        }
+
+        private void increaseScoreBy(int amount) {
+            scoreCount++;
+            scoreBoard.setText(scoreCount+"");
         }
 
         private void reduceTopBy(int size) {

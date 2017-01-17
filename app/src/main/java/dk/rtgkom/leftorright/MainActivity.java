@@ -8,11 +8,13 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
     private MainUIHandler mainUIHandler;
 
+    private TextView scoreBoard;
     private View topScroller;
     private LinearLayoutCompat cardsWrapper;
     private RecyclerView cardsContainer;
@@ -23,12 +25,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
+        scoreBoard = (TextView) findViewById(R.id.score_board);
         topScroller = findViewById(R.id.top_scroller);
         cardsWrapper = (LinearLayoutCompat) findViewById(R.id.cards_wrapper);
         cardsContainer = (RecyclerView) findViewById(R.id.cards_container);
         mainUIHandler = new MainUIHandler(this, topScroller,
-                cardsWrapper, cardsContainer){};
+                cardsWrapper, cardsContainer, scoreBoard){};
 
         layoutManager = new LinearLayoutManager(MainActivity.this){
             @Override

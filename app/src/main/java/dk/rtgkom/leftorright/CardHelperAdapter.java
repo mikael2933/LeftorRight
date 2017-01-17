@@ -5,5 +5,5 @@ package dk.rtgkom.leftorright;
  */
 
 public interface CardHelperAdapter {
-    void onCardDismiss(int position);
+    void onCardDismiss(int position, int direction);
 }
