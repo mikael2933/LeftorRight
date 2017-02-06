@@ -37,7 +37,7 @@ public class CardContainerAdapter extends RecyclerView.Adapter<CardContainerAdap
     public CardContainerAdapter(MainUIHandler mainUIHandler,
                                 LinearLayoutCompat cardsWrapper){
         cardsSwiped = 0;
-        cards = generateNewCards();
+        cards = generateNewCards(cards);
         this.mainUIHandler = mainUIHandler;
         this.cardsWrapper = cardsWrapper;
     }
@@ -79,23 +79,34 @@ public class CardContainerAdapter extends RecyclerView.Adapter<CardContainerAdap
         System.out.println("Card direction : " + cards.get(position).getDirection());
         if (cards.get(position).getDirection() == direction) {
             //If correct swipe direction
+            cardsSwiped++;
+            System.out.println("Cards swiped : " + cardsSwiped);
+            if(cardsSwiped == 15) {
+                cards = generateNewCards(cards);
+                cardsSwiped = 1;
+            }
+
             mainUIHandler.getHandler().sendEmptyMessage(MainUIHandler.INCREASE_SCORE);
+            mainUIHandler.getHandler().sendEmptyMessage(MainUIHandler.TOP_EXTEND);
+            cards.remove(position);
+            notifyDataSetChanged();
+        } else {
+            mainUIHandler.getHandler().sendEmptyMessage(MainUIHandler.STOP_GAME);
         }
-        cardsSwiped++;
-        System.out.println("Cards swiped : " + cardsSwiped);
-        if(cardsSwiped > 10) {
-            cards = generateNewCards();
-            cardsSwiped = 0;
-        }
-        mainUIHandler.getHandler().sendEmptyMessage(MainUIHandler.TOP_EXTEND);
-        cards.remove(position);
-        notifyDataSetChanged();
     }
 
-    private List<Card> generateNewCards(){
+    private List<Card> generateNewCards(List<Card> oldCards){
         List<Card>cards = new ArrayList<>();
+        int i=0;
+        if (oldCards != null && oldCards.size() < 1) {
+            int _i = oldCards.size() - 4;
+            for (; _i == oldCards.size(); _i++) {
+                cards.add(oldCards.get(_i));
+            }
+            i = 4;
+        }
         Random random = new Random();
-        for (int i=0; i<20; i++) {
+        for (; i<20; i++) {
             int color = random.nextInt(2);
             int arrow = random.nextInt(2);
             cards.add(new Card(color, arrow));

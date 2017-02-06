@@ -42,6 +42,12 @@ public class CardTouchHelper extends ItemTouchHelper.Callback {
     }
 
     @Override
+    public float getSwipeThreshold(RecyclerView.ViewHolder viewHolder) {
+        //return super.getSwipeThreshold(viewHolder);
+        return 0.1f;
+    }
+
+    @Override
     public long getAnimationDuration(RecyclerView recyclerView, int animationType, float animateDx, float animateDy) {
         return super.getAnimationDuration(recyclerView, animationType, animateDx, animateDy);
         //return 10;
